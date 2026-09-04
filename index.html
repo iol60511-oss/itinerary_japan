@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>曼谷自由行行程表</title>
+  <!-- 引入 Tailwind CSS 快速美化排版 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-12">
+
+  <!-- 頂部 Header -->
+  <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-8 px-4 shadow-md text-center">
+    <h1 class="text-3xl font-extrabold tracking-wide">🇹🇭 曼谷自由行行程規劃</h1>
+    <p class="mt-2 text-blue-100 text-sm">歡迎給予建議與修改意見！請在下方各天留下你的想法。</p>
+  </header>
+
+  <main class="max-w-3xl mx-auto mt-6 px-4 space-y-6">
+
+    <!-- 航班資訊卡片 -->
+    <section class="bg-white rounded-xl shadow-sm p-5 border border-slate-200">
+      <h2 class="text-lg font-bold text-slate-800 border-b pb-2 mb-3">✈️ 航班資訊</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div class="bg-slate-50 p-3 rounded-lg">
+          <p class="font-semibold text-blue-600">去程航班 (TPE ➔ BKK)</p>
+          <p class="mt-1">09:00 起飛 ➔ 11:45 抵達曼谷機場</p>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-lg">
+          <p class="font-semibold text-indigo-600">回程航班 (BKK ➔ TPE)</p>
+          <p class="mt-1">17:30 起飛 ➔ 22:15 抵達桃園機場</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 行程卡片：Day 1 -->
+    <article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <!-- 標題與日期 -->
+      <div class="bg-slate-50 p-4 border-b border-slate-200 flex justify-between items-center">
+        <h3 class="font-bold text-slate-800">Day 1：抵達曼谷 ➔ 飯店 Check-in ➔ 喬德夜市</h3>
+        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded font-medium">9/28 (一)</span>
+      </div>
+
+      <div class="p-5 space-y-4">
+        <!-- 行程清單 -->
+        <ul class="list-disc list-inside space-y-2 text-sm text-slate-600">
+          <li>11:45 抵達 BKK 機場，搭乘機場快線或叫車前往市區</li>
+          <li>14:00 飯店辦理入住，周邊體驗泰式按摩</li>
+          <li>18:30 前往 Jodd Fairs 喬德夜市（必吃火山排骨、水果冰沙）</li>
+        </ul>
+
+        <!-- Google Maps 內嵌 -->
+        <div class="rounded-lg overflow-hidden border border-slate-200 mt-3">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d124015.42468305609!2d100.49051515!3d13.7563309!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2993fa35205f3%3A0x2475ec65a953fe52!2z5rOw6LC3!5e0!3m2!1szh-TW!2stw!4v1700000000000!5m2!1szh-TW!2stw" 
+            width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy">
+          </iframe>
+        </div>
+
+        <!-- 備註與互動留言區 -->
+        <div class="border-t border-slate-100 pt-3">
+          <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">💬 備註與建議</h4>
+          <div id="comments-day-1" class="space-y-1 text-sm text-slate-600 mb-3">
+            <!-- 留言會透過 JS 插入在此 -->
+          </div>
+
+          <div class="flex gap-2">
+            <input id="input-day-1" type="text" placeholder="留言或提議更換行程..." 
+                   class="flex-1 text-sm border border-slate-300 rounded px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onclick="addComment('day-1')" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1.5 rounded transition">
+              送出
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 若要新增 Day 2、Day 3，只需複製上方 article 區塊並把 ID 改為 day-2、day-3 即可 -->
+
+  </main>
+
+  <!-- 前端簡易留言邏輯 (保存在瀏覽器 LocalStorage) -->
+  <script>
+    function loadComments(dayId) {
+      const comments = JSON.parse(localStorage.getItem('comments_' + dayId) || '[]');
+      const container = document.getElementById('comments-' + dayId);
+      container.innerHTML = comments.length === 0 
+        ? '<p class="text-xs text-slate-400">目前尚無留言。</p>' 
+        : comments.map(c => `<div class="bg-slate-50 p-2 rounded border border-slate-100">💡 ${c}</div>`).join('');
+    }
+
+    function addComment(dayId) {
+      const input = document.getElementById('input-' + dayId);
+      const text = input.value.trim();
+      if (!text) return;
+
+      const comments = JSON.parse(localStorage.getItem('comments_' + dayId) || '[]');
+      comments.push(text);
+      localStorage.setItem('comments_' + dayId, JSON.stringify(comments));
+      input.value = '';
+      loadComments(dayId);
+    }
+
+    // 頁面載入時初始化讀取
+    window.onload = function() {
+      loadComments('day-1');
+    };
+  </script>
+</body>
+</html>
